@@ -1,19 +1,4 @@
-/**
- * *********************************************************
- *
- * @file: mpc_controller.h
- * @brief: Contains the model predicted control (MPC) local controller class
- * @author: Yang Haodong
- * @date: 2024-01-31
- * @version: 1.0
- *
- * Copyright (c) 2024, Yang Haodong.
- * All rights reserved.
- *
- * --------------------------------------------------------
- *
- * ********************************************************
- */
+
 #ifndef RMP_CONTROLLER_MPC_CONTROLLER_H_
 #define RMP_CONTROLLER_MPC_CONTROLLER_H_
 
