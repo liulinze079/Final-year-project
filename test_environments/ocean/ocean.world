@@ -1,0 +1,1619 @@
+<?xml version='1.0' encoding='utf-8'?>
+<sdf version="1.7">
+  <world name="ocean_usv_world">
+    <scene>
+      <sky>
+        <clouds>
+          <speed>12</speed>
+        </clouds>
+      </sky>
+      <grid>0</grid>
+      <origin_visual>0</origin_visual>
+      <ambient>0.4 0.4 0.4 1</ambient>
+      <background>0.7 0.7 0.7 1</background>
+      <shadows>1</shadows>
+    </scene>
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <world_frame_orientation>ENU</world_frame_orientation>
+      <latitude_deg>-33.7242</latitude_deg>
+      <longitude_deg>150.68</longitude_deg>
+      <elevation>0</elevation>
+      <heading_deg>0</heading_deg>
+    </spherical_coordinates>
+    <light name="sun" type="directional">
+      <cast_shadows>1</cast_shadows>
+      <pose>0 0 10 0 -0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+      <spot>
+        <inner_angle>0</inner_angle>
+        <outer_angle>0</outer_angle>
+        <falloff>0</falloff>
+      </spot>
+    </light>
+    <gui fullscreen="0">
+      <camera name="user_camera">
+        <pose>69.209 46.4468 53.5184 0 0.497799 -2.68764</pose>
+        <view_controller>orbit</view_controller>
+        <projection_type>perspective</projection_type>
+      </camera>
+    </gui>
+    <model name="ocean_waves">
+      <static>true</static>
+      <plugin filename="libWavefieldModelPlugin.so" name="wavefield_plugin">
+        <static>false</static>
+        <update_rate>30</update_rate>
+        <size>1000 1000</size>
+        <cell_count>50 50</cell_count>
+        <wave>
+          <model>PMS</model>
+          <period>5</period>
+          <number>3</number>
+          <scale>2.5</scale>
+          <gain>0.1</gain>
+          <direction>1.0 0.0</direction>
+          <angle>0.4</angle>
+          <tau>2.0</tau>
+          <amplitude>0.0</amplitude>
+          <steepness>0.0</steepness>
+        </wave>
+      </plugin>
+      <link name="ocean_waves_link">
+        <visual name="ocean_waves_visual">
+          <plugin filename="libWavefieldVisualPlugin.so" name="ocean_waves_visual_plugin">
+            <enableRtt>true</enableRtt>
+            <rttNoise>0.1</rttNoise>
+            <refractOpacity>0.2</refractOpacity>
+            <reflectOpacity>0.2</reflectOpacity>
+            <wave>
+              <model>PMS</model>
+              <period>5</period>
+              <number>3</number>
+              <scale>2.5</scale>
+              <gain>0.1</gain>
+              <direction>1.0 0.0</direction>
+              <angle>0.4</angle>
+              <tau>2.0</tau>
+              <amplitude>0.0</amplitude>
+              <steepness>0.0</steepness>
+            </wave>
+          </plugin>
+          <geometry>
+            <mesh>
+              <scale>2.5 2.5 1</scale>
+              <uri>model://ocean_waves/meshes/mesh.dae</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://ocean_waves/materials/scripts/waves.material</uri>
+              <name>WaveSim/GerstnerWaves</name>
+            </script>
+          </material>
+          <laser_retro>-1</laser_retro>
+        </visual>
+        <visual name="ocean_waves_below_visual">
+          <pose>0 0 -0.05 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>2.5 2.5 1</scale>
+              <uri>model://ocean_waves/meshes/mesh_below.dae</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://ocean_waves/materials/scripts/waves.material</uri>
+              <name>WaveSim/GerstnerWaves</name>
+            </script>
+          </material>
+          <laser_retro>-1</laser_retro>
+        </visual>
+      </link>
+    </model>
+    
+    <plugin name="wind" filename="libusv_gazebo_wind_plugin.so">
+      <wind_obj>
+        <name>wamv</name>
+        <link_name>wamv/base_link</link_name>
+        <coeff_vector>.5 .5 .33</coeff_vector>
+      </wind_obj>
+      <wind_direction>270</wind_direction>
+      <wind_mean_velocity>0</wind_mean_velocity>
+      <var_wind_gain_constants>0</var_wind_gain_constants>
+      <var_wind_time_constants>2</var_wind_time_constants>
+      <random_seed />
+      <update_rate>10</update_rate>
+      <topic_wind_speed>/vrx/debug/wind/speed</topic_wind_speed>
+      <topic_wind_direction>/vrx/debug/wind/direction</topic_wind_direction>
+    </plugin>
+    <gravity>0 0 -9.8</gravity>
+    <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
+    <atmosphere type="adiabatic" />
+    <physics type="ode">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+    <wind />
+    <model name="sandisland">
+      <pose>45.7512 3.07833 0 0 -0 0</pose>
+      <static>1</static>
+      <link name="silink">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://sim_env/models/sandisland/meshes/sandisland.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>model://sim_env/models/sandisland/meshes/sandisland.dae</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode />
+            </contact>
+            <bounce />
+            <friction>
+              <torsional>
+                <ode />
+              </torsional>
+              <ode />
+            </friction>
+          </surface>
+        </collision>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    
+    <!-- TRACK 1 OBSTACLES (y=-10) with alternating pattern -->
+    <!-- First obstacle (x=40, y=-7) - Right side of lane -->
+    <model name="BOX_0">
+      <link name="BOX_0_link">
+        <inertial>
+          <pose>40.0 -7.0 0.3 0 0 0</pose>
+          <mass>10.0</mass>
+          <inertia>
+            <ixx>20.833333333333332</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>20.833333333333332</iyy>
+            <iyz>0</iyz>
+            <izz>41.666666666666664</izz>
+          </inertia>
+        </inertial>
+        <collision name="BOX_0_link_collision">
+          <pose>40.0 -7.0 0.3 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>5.0 5.0 2.0</size>
+            </box>
+          </geometry>
+          <surface>
+            <contact>
+              <ode>
+                <kp>100000</kp>
+                <kd>100000</kd>
+              </ode>
+            </contact>
+            <friction>
+              <ode>
+                <mu>10</mu>
+                <mu2>10</mu2>
+              </ode>
+              <torsional>
+                <ode />
+              </torsional>
+            </friction>
+            <bounce />
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name="BOX_0_link_visual">
+          <pose>40.0 -7.0 0.3 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>5.0 5.0 2.0</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/WoodFloor</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <plugin name="BuoyancyPlugin" filename="libbuoyancy_gazebo_plugin.so">
+        <wave_model>ocean_waves</wave_model>
+        <fluid_density>1000</fluid_density>
+        <fluid_level>0</fluid_level>
+        <linear_drag>1000.0</linear_drag>
+        <angular_drag>200.0</angular_drag>
+        <buoyancy name="buoyancy_base">
+          <link_name>BOX_0_link</link_name>
+          <pose>40.0 -7.0 0.3 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.28794119114848615</radius>
+            </sphere>
+          </geometry>
+        </buoyancy>
+      </plugin>
+    </model>
+    
+    <!-- Second obstacle (x=65, y=-13) - Left side of lane -->
+    <model name="BOX_1">
+      <link name="BOX_1_link">
+        <inertial>
+          <pose>65.0 -13.0 0.3 0 0 0</pose>
+          <mass>10.0</mass>
+          <inertia>
+            <ixx>20.833333333333332</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>20.833333333333332</iyy>
+            <iyz>0</iyz>
+            <izz>41.666666666666664</izz>
+          </inertia>
+        </inertial>
+        <collision name="BOX_1_link_collision">
+          <pose>65.0 -13.0 0.3 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>5.0 5.0 2.0</size>
+            </box>
+          </geometry>
+          <surface>
+            <contact>
+              <ode>
+                <kp>100000</kp>
+                <kd>100000</kd>
+              </ode>
+            </contact>
+            <friction>
+              <ode>
+                <mu>10</mu>
+                <mu2>10</mu2>
+              </ode>
+              <torsional>
+                <ode />
+              </torsional>
+            </friction>
+            <bounce />
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name="BOX_1_link_visual">
+          <pose>65.0 -13.0 0.3 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>5.0 5.0 2.0</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/WoodFloor</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <plugin name="BuoyancyPlugin" filename="libbuoyancy_gazebo_plugin.so">
+        <wave_model>ocean_waves</wave_model>
+        <fluid_density>1000</fluid_density>
+        <fluid_level>0</fluid_level>
+        <linear_drag>1000.0</linear_drag>
+        <angular_drag>200.0</angular_drag>
+        <buoyancy name="buoyancy_base">
+          <link_name>BOX_1_link</link_name>
+          <pose>65.0 -13.0 0.3 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.28794119114848615</radius>
+            </sphere>
+          </geometry>
+        </buoyancy>
+      </plugin>
+    </model>
+
+    <!-- Third obstacle (x=90, y=-7) - Right side of lane -->
+    <model name="BOX_2">
+      <link name="BOX_2_link">
+        <inertial>
+          <pose>90.0 -7.0 0.3 0 0 0</pose>
+          <mass>10.0</mass>
+          <inertia>
+            <ixx>20.833333333333332</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>20.833333333333332</iyy>
+            <iyz>0</iyz>
+            <izz>41.666666666666664</izz>
+          </inertia>
+        </inertial>
+        <collision name="BOX_2_link_collision">
+          <pose>90.0 -7.0 0.3 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>5.0 5.0 2.0</size>
+            </box>
+          </geometry>
+          <surface>
+            <contact>
+              <ode>
+                <kp>100000</kp>
+                <kd>100000</kd>
+              </ode>
+            </contact>
+            <friction>
+              <ode>
+                <mu>10</mu>
+                <mu2>10</mu2>
+              </ode>
+              <torsional>
+                <ode />
+              </torsional>
+            </friction>
+            <bounce />
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name="BOX_2_link_visual">
+          <pose>90.0 -7.0 0.3 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>5.0 5.0 2.0</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/WoodFloor</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <plugin name="BuoyancyPlugin" filename="libbuoyancy_gazebo_plugin.so">
+        <wave_model>ocean_waves</wave_model>
+        <fluid_density>1000</fluid_density>
+        <fluid_level>0</fluid_level>
+        <linear_drag>1000.0</linear_drag>
+        <angular_drag>200.0</angular_drag>
+        <buoyancy name="buoyancy_base">
+          <link_name>BOX_2_link</link_name>
+          <pose>90.0 -7.0 0.3 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.28794119114848615</radius>
+            </sphere>
+          </geometry>
+        </buoyancy>
+      </plugin>
+    </model>
+
+    <!-- Fourth obstacle (x=115, y=-13) - Left side of lane -->
+    <model name="BOX_3">
+      <link name="BOX_3_link">
+        <inertial>
+          <pose>115.0 -13.0 0.3 0 0 0</pose>
+          <mass>10.0</mass>
+          <inertia>
+            <ixx>20.833333333333332</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>20.833333333333332</iyy>
+            <iyz>0</iyz>
+            <izz>41.666666666666664</izz>
+          </inertia>
+        </inertial>
+        <collision name="BOX_3_link_collision">
+          <pose>115.0 -13.0 0.3 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>5.0 5.0 2.0</size>
+            </box>
+          </geometry>
+          <surface>
+            <contact>
+              <ode>
+                <kp>100000</kp>
+                <kd>100000</kd>
+              </ode>
+            </contact>
+            <friction>
+              <ode>
+                <mu>10</mu>
+                <mu2>10</mu2>
+              </ode>
+              <torsional>
+                <ode />
+              </torsional>
+            </friction>
+            <bounce />
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name="BOX_3_link_visual">
+          <pose>115.0 -13.0 0.3 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>5.0 5.0 2.0</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/WoodFloor</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <plugin name="BuoyancyPlugin" filename="libbuoyancy_gazebo_plugin.so">
+        <wave_model>ocean_waves</wave_model>
+        <fluid_density>1000</fluid_density>
+        <fluid_level>0</fluid_level>
+        <linear_drag>1000.0</linear_drag>
+        <angular_drag>200.0</angular_drag>
+        <buoyancy name="buoyancy_base">
+          <link_name>BOX_3_link</link_name>
+          <pose>115.0 -13.0 0.3 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.28794119114848615</radius>
+            </sphere>
+          </geometry>
+        </buoyancy>
+      </plugin>
+    </model>
+
+    <!-- Fifth obstacle (x=140, y=-7) - Right side of lane -->
+    <model name="BOX_4">
+      <link name="BOX_4_link">
+        <inertial>
+          <pose>140.0 -7.0 0.3 0 0 0</pose>
+          <mass>10.0</mass>
+          <inertia>
+            <ixx>20.833333333333332</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>20.833333333333332</iyy>
+            <iyz>0</iyz>
+            <izz>41.666666666666664</izz>
+          </inertia>
+        </inertial>
+        <collision name="BOX_4_link_collision">
+          <pose>140.0 -7.0 0.3 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>5.0 5.0 2.0</size>
+            </box>
+          </geometry>
+          <surface>
+            <contact>
+              <ode>
+                <kp>100000</kp>
+                <kd>100000</kd>
+              </ode>
+            </contact>
+            <friction>
+              <ode>
+                <mu>10</mu>
+                <mu2>10</mu2>
+              </ode>
+              <torsional>
+                <ode />
+              </torsional>
+            </friction>
+            <bounce />
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name="BOX_4_link_visual">
+          <pose>140.0 -7.0 0.3 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>5.0 5.0 2.0</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/WoodFloor</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <plugin name="BuoyancyPlugin" filename="libbuoyancy_gazebo_plugin.so">
+        <wave_model>ocean_waves</wave_model>
+        <fluid_density>1000</fluid_density>
+        <fluid_level>0</fluid_level>
+        <linear_drag>1000.0</linear_drag>
+        <angular_drag>200.0</angular_drag>
+        <buoyancy name="buoyancy_base">
+          <link_name>BOX_4_link</link_name>
+          <pose>140.0 -7.0 0.3 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.28794119114848615</radius>
+            </sphere>
+          </geometry>
+        </buoyancy>
+      </plugin>
+    </model>
+
+    <!-- TRACK 2 OBSTACLES (y=-26) with alternating pattern -->
+    <!-- First obstacle (x=40, y=-23) - Right side of lane -->
+    <model name="BOX_5">
+      <link name="BOX_5_link">
+        <inertial>
+          <pose>40.0 -23.0 0.3 0 0 0</pose>
+          <mass>10.0</mass>
+          <inertia>
+            <ixx>20.833333333333332</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>20.833333333333332</iyy>
+            <iyz>0</iyz>
+            <izz>41.666666666666664</izz>
+          </inertia>
+        </inertial>
+        <collision name="BOX_5_link_collision">
+          <pose>40.0 -23.0 0.3 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>5.0 5.0 2.0</size>
+            </box>
+          </geometry>
+          <surface>
+            <contact>
+              <ode>
+                <kp>100000</kp>
+                <kd>100000</kd>
+              </ode>
+            </contact>
+            <friction>
+              <ode>
+                <mu>10</mu>
+                <mu2>10</mu2>
+              </ode>
+              <torsional>
+                <ode />
+              </torsional>
+            </friction>
+            <bounce />
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name="BOX_5_link_visual">
+          <pose>40.0 -23.0 0.3 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>5.0 5.0 2.0</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/WoodFloor</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <plugin name="BuoyancyPlugin" filename="libbuoyancy_gazebo_plugin.so">
+        <wave_model>ocean_waves</wave_model>
+        <fluid_density>1000</fluid_density>
+        <fluid_level>0</fluid_level>
+        <linear_drag>1000.0</linear_drag>
+        <angular_drag>200.0</angular_drag>
+        <buoyancy name="buoyancy_base">
+          <link_name>BOX_5_link</link_name>
+          <pose>40.0 -23.0 0.3 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.28794119114848615</radius>
+            </sphere>
+          </geometry>
+        </buoyancy>
+      </plugin>
+    </model>
+
+    <!-- Second obstacle (x=70, y=-29) - Left side of lane -->
+    <model name="BOX_6">
+      <link name="BOX_6_link">
+        <inertial>
+          <pose>70.0 -29.0 0.3 0 0 0</pose>
+          <mass>10.0</mass>
+          <inertia>
+            <ixx>20.833333333333332</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>20.833333333333332</iyy>
+            <iyz>0</iyz>
+            <izz>41.666666666666664</izz>
+          </inertia>
+        </inertial>
+        <collision name="BOX_6_link_collision">
+          <pose>70.0 -29.0 0.3 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>5.0 5.0 2.0</size>
+            </box>
+          </geometry>
+          <surface>
+            <contact>
+              <ode>
+                <kp>100000</kp>
+                <kd>100000</kd>
+              </ode>
+            </contact>
+            <friction>
+              <ode>
+                <mu>10</mu>
+                <mu2>10</mu2>
+              </ode>
+              <torsional>
+                <ode />
+              </torsional>
+            </friction>
+            <bounce />
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name="BOX_6_link_visual">
+          <pose>70.0 -29.0 0.3 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>5.0 5.0 2.0</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/WoodFloor</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <plugin name="BuoyancyPlugin" filename="libbuoyancy_gazebo_plugin.so">
+        <wave_model>ocean_waves</wave_model>
+        <fluid_density>1000</fluid_density>
+        <fluid_level>0</fluid_level>
+        <linear_drag>1000.0</linear_drag>
+        <angular_drag>200.0</angular_drag>
+        <buoyancy name="buoyancy_base">
+          <link_name>BOX_6_link</link_name>
+          <pose>70.0 -29.0 0.3 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.28794119114848615</radius>
+            </sphere>
+          </geometry>
+        </buoyancy>
+      </plugin>
+    </model>
+
+    <!-- Third obstacle (x=95, y=-23) - Right side of lane -->
+    <model name="BOX_7">
+      <link name="BOX_7_link">
+        <inertial>
+          <pose>95.0 -23.0 0.3 0 0 0</pose>
+          <mass>10.0</mass>
+          <inertia>
+            <ixx>20.833333333333332</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>20.833333333333332</iyy>
+            <iyz>0</iyz>
+            <izz>41.666666666666664</izz>
+          </inertia>
+        </inertial>
+        <collision name="BOX_7_link_collision">
+          <pose>95.0 -23.0 0.3 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>5.0 5.0 2.0</size>
+            </box>
+          </geometry>
+          <surface>
+            <contact>
+              <ode>
+                <kp>100000</kp>
+                <kd>100000</kd>
+              </ode>
+            </contact>
+            <friction>
+              <ode>
+                <mu>10</mu>
+                <mu2>10</mu2>
+              </ode>
+              <torsional>
+                <ode />
+              </torsional>
+            </friction>
+            <bounce />
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name="BOX_7_link_visual">
+          <pose>95.0 -23.0 0.3 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>5.0 5.0 2.0</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/WoodFloor</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <plugin name="BuoyancyPlugin" filename="libbuoyancy_gazebo_plugin.so">
+        <wave_model>ocean_waves</wave_model>
+        <fluid_density>1000</fluid_density>
+        <fluid_level>0</fluid_level>
+        <linear_drag>1000.0</linear_drag>
+        <angular_drag>200.0</angular_drag>
+        <buoyancy name="buoyancy_base">
+          <link_name>BOX_7_link</link_name>
+          <pose>95.0 -23.0 0.3 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.28794119114848615</radius>
+            </sphere>
+          </geometry>
+        </buoyancy>
+      </plugin>
+    </model>
+
+    <!-- Fourth obstacle (x=120, y=-29) - Left side of lane -->
+    <model name="BOX_8">
+      <link name="BOX_8_link">
+        <inertial>
+          <pose>120.0 -29.0 0.3 0 0 0</pose>
+          <mass>10.0</mass>
+          <inertia>
+            <ixx>20.833333333333332</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>20.833333333333332</iyy>
+            <iyz>0</iyz>
+            <izz>41.666666666666664</izz>
+          </inertia>
+        </inertial>
+        <collision name="BOX_8_link_collision">
+          <pose>120.0 -29.0 0.3 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>5.0 5.0 2.0</size>
+            </box>
+          </geometry>
+          <surface>
+            <contact>
+              <ode>
+                <kp>100000</kp>
+                <kd>100000</kd>
+              </ode>
+            </contact>
+            <friction>
+              <ode>
+                <mu>10</mu>
+                <mu2>10</mu2>
+              </ode>
+              <torsional>
+                <ode />
+              </torsional>
+            </friction>
+            <bounce />
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name="BOX_8_link_visual">
+          <pose>120.0 -29.0 0.3 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>5.0 5.0 2.0</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/WoodFloor</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <plugin name="BuoyancyPlugin" filename="libbuoyancy_gazebo_plugin.so">
+        <wave_model>ocean_waves</wave_model>
+        <fluid_density>1000</fluid_density>
+        <fluid_level>0</fluid_level>
+        <linear_drag>1000.0</linear_drag>
+        <angular_drag>200.0</angular_drag>
+        <buoyancy name="buoyancy_base">
+          <link_name>BOX_8_link</link_name>
+          <pose>120.0 -29.0 0.3 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.28794119114848615</radius>
+            </sphere>
+          </geometry>
+        </buoyancy>
+      </plugin>
+    </model>
+
+    <!-- Fifth obstacle (x=145, y=-23) - Right side of lane -->
+    <model name="BOX_9">
+      <link name="BOX_9_link">
+        <inertial>
+          <pose>145.0 -23.0 0.3 0 0 0</pose>
+          <mass>10.0</mass>
+          <inertia>
+            <ixx>20.833333333333332</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>20.833333333333332</iyy>
+            <iyz>0</iyz>
+            <izz>41.666666666666664</izz>
+          </inertia>
+        </inertial>
+        <collision name="BOX_9_link_collision">
+          <pose>145.0 -23.0 0.3 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>5.0 5.0 2.0</size>
+            </box>
+          </geometry>
+          <surface>
+            <contact>
+              <ode>
+                <kp>100000</kp>
+                <kd>100000</kd>
+              </ode>
+            </contact>
+            <friction>
+              <ode>
+                <mu>10</mu>
+                <mu2>10</mu2>
+              </ode>
+              <torsional>
+                <ode />
+              </torsional>
+            </friction>
+            <bounce />
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name="BOX_9_link_visual">
+          <pose>145.0 -23.0 0.3 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>5.0 5.0 2.0</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/WoodFloor</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <plugin name="BuoyancyPlugin" filename="libbuoyancy_gazebo_plugin.so">
+        <wave_model>ocean_waves</wave_model>
+        <fluid_density>1000</fluid_density>
+        <fluid_level>0</fluid_level>
+        <linear_drag>1000.0</linear_drag>
+        <angular_drag>200.0</angular_drag>
+        <buoyancy name="buoyancy_base">
+          <link_name>BOX_9_link</link_name>
+          <pose>145.0 -23.0 0.3 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.28794119114848615</radius>
+            </sphere>
+          </geometry>
+        </buoyancy>
+      </plugin>
+    </model>
+
+    <!-- TRACK 3 OBSTACLES (y=-42) with alternating pattern -->
+    <!-- First obstacle (x=40, y=-39) - Right side of lane -->
+    <model name="BOX_10">
+      <link name="BOX_10_link">
+        <inertial>
+          <pose>40.0 -39.0 0.3 0 0 0</pose>
+          <mass>10.0</mass>
+          <inertia>
+            <ixx>20.833333333333332</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>20.833333333333332</iyy>
+            <iyz>0</iyz>
+            <izz>41.666666666666664</izz>
+          </inertia>
+        </inertial>
+        <collision name="BOX_10_link_collision">
+          <pose>40.0 -39.0 0.3 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>5.0 5.0 2.0</size>
+            </box>
+          </geometry>
+          <surface>
+            <contact>
+              <ode>
+                <kp>100000</kp>
+                <kd>100000</kd>
+              </ode>
+            </contact>
+            <friction>
+              <ode>
+                <mu>10</mu>
+                <mu2>10</mu2>
+              </ode>
+              <torsional>
+                <ode />
+              </torsional>
+            </friction>
+            <bounce />
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name="BOX_10_link_visual">
+          <pose>40.0 -39.0 0.3 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>5.0 5.0 2.0</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/WoodFloor</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <plugin name="BuoyancyPlugin" filename="libbuoyancy_gazebo_plugin.so">
+        <wave_model>ocean_waves</wave_model>
+        <fluid_density>1000</fluid_density>
+        <fluid_level>0</fluid_level>
+        <linear_drag>1000.0</linear_drag>
+        <angular_drag>200.0</angular_drag>
+        <buoyancy name="buoyancy_base">
+          <link_name>BOX_10_link</link_name>
+          <pose>40.0 -39.0 0.3 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.28794119114848615</radius>
+            </sphere>
+          </geometry>
+        </buoyancy>
+      </plugin>
+    </model>
+
+    <!-- Second obstacle (x=60, y=-45) - Left side of lane -->
+    <model name="BOX_11">
+      <link name="BOX_11_link">
+        <inertial>
+          <pose>60.0 -45.0 0.3 0 0 0</pose>
+          <mass>10.0</mass>
+          <inertia>
+            <ixx>20.833333333333332</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>20.833333333333332</iyy>
+            <iyz>0</iyz>
+            <izz>41.666666666666664</izz>
+          </inertia>
+        </inertial>
+        <collision name="BOX_11_link_collision">
+          <pose>60.0 -45.0 0.3 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>5.0 5.0 2.0</size>
+            </box>
+          </geometry>
+          <surface>
+            <contact>
+              <ode>
+                <kp>100000</kp>
+                <kd>100000</kd>
+              </ode>
+            </contact>
+            <friction>
+              <ode>
+                <mu>10</mu>
+                <mu2>10</mu2>
+              </ode>
+              <torsional>
+                <ode />
+              </torsional>
+            </friction>
+            <bounce />
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name="BOX_11_link_visual">
+          <pose>60.0 -45.0 0.3 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>5.0 5.0 2.0</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/WoodFloor</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <plugin name="BuoyancyPlugin" filename="libbuoyancy_gazebo_plugin.so">
+        <wave_model>ocean_waves</wave_model>
+        <fluid_density>1000</fluid_density>
+        <fluid_level>0</fluid_level>
+        <linear_drag>1000.0</linear_drag>
+        <angular_drag>200.0</angular_drag>
+        <buoyancy name="buoyancy_base">
+          <link_name>BOX_11_link</link_name>
+          <pose>60.0 -45.0 0.3 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.28794119114848615</radius>
+            </sphere>
+          </geometry>
+        </buoyancy>
+      </plugin>
+    </model>
+
+    <!-- Third obstacle (x=85, y=-39) - Right side of lane -->
+    <model name="BOX_12">
+      <link name="BOX_12_link">
+        <inertial>
+          <pose>85.0 -39.0 0.3 0 0 0</pose>
+          <mass>10.0</mass>
+          <inertia>
+            <ixx>20.833333333333332</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>20.833333333333332</iyy>
+            <iyz>0</iyz>
+            <izz>41.666666666666664</izz>
+          </inertia>
+        </inertial>
+        <collision name="BOX_12_link_collision">
+          <pose>85.0 -39.0 0.3 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>5.0 5.0 2.0</size>
+            </box>
+          </geometry>
+          <surface>
+            <contact>
+              <ode>
+                <kp>100000</kp>
+                <kd>100000</kd>
+              </ode>
+            </contact>
+            <friction>
+              <ode>
+                <mu>10</mu>
+                <mu2>10</mu2>
+              </ode>
+              <torsional>
+                <ode />
+              </torsional>
+            </friction>
+            <bounce />
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name="BOX_12_link_visual">
+          <pose>85.0 -39.0 0.3 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>5.0 5.0 2.0</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/WoodFloor</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <plugin name="BuoyancyPlugin" filename="libbuoyancy_gazebo_plugin.so">
+        <wave_model>ocean_waves</wave_model>
+        <fluid_density>1000</fluid_density>
+        <fluid_level>0</fluid_level>
+        <linear_drag>1000.0</linear_drag>
+        <angular_drag>200.0</angular_drag>
+        <buoyancy name="buoyancy_base">
+          <link_name>BOX_12_link</link_name>
+          <pose>85.0 -39.0 0.3 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.28794119114848615</radius>
+            </sphere>
+          </geometry>
+        </buoyancy>
+      </plugin>
+    </model>
+
+    <!-- Fourth obstacle (x=110, y=-45) - Left side of lane -->
+    <model name="BOX_13">
+      <link name="BOX_13_link">
+        <inertial>
+          <pose>110.0 -45.0 0.3 0 0 0</pose>
+          <mass>10.0</mass>
+          <inertia>
+            <ixx>20.833333333333332</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>20.833333333333332</iyy>
+            <iyz>0</iyz>
+            <izz>41.666666666666664</izz>
+          </inertia>
+        </inertial>
+        <collision name="BOX_13_link_collision">
+          <pose>110.0 -45.0 0.3 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>5.0 5.0 2.0</size>
+            </box>
+          </geometry>
+          <surface>
+            <contact>
+              <ode>
+                <kp>100000</kp>
+                <kd>100000</kd>
+              </ode>
+            </contact>
+            <friction>
+              <ode>
+                <mu>10</mu>
+                <mu2>10</mu2>
+              </ode>
+              <torsional>
+                <ode />
+              </torsional>
+            </friction>
+            <bounce />
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name="BOX_13_link_visual">
+          <pose>110.0 -45.0 0.3 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>5.0 5.0 2.0</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/WoodFloor</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <plugin name="BuoyancyPlugin" filename="libbuoyancy_gazebo_plugin.so">
+        <wave_model>ocean_waves</wave_model>
+        <fluid_density>1000</fluid_density>
+        <fluid_level>0</fluid_level>
+        <linear_drag>1000.0</linear_drag>
+        <angular_drag>200.0</angular_drag>
+        <buoyancy name="buoyancy_base">
+          <link_name>BOX_13_link</link_name>
+          <pose>110.0 -45.0 0.3 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.28794119114848615</radius>
+            </sphere>
+          </geometry>
+        </buoyancy>
+      </plugin>
+    </model>
+
+    <!-- Fifth obstacle (x=135, y=-39) - Right side of lane -->
+    <model name="BOX_14">
+      <link name="BOX_14_link">
+        <inertial>
+          <pose>135.0 -39.0 0.3 0 0 0</pose>
+          <mass>10.0</mass>
+          <inertia>
+            <ixx>20.833333333333332</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>20.833333333333332</iyy>
+            <iyz>0</iyz>
+            <izz>41.666666666666664</izz>
+          </inertia>
+        </inertial>
+        <collision name="BOX_14_link_collision">
+          <pose>135.0 -39.0 0.3 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>5.0 5.0 2.0</size>
+            </box>
+          </geometry>
+          <surface>
+            <contact>
+              <ode>
+                <kp>100000</kp>
+                <kd>100000</kd>
+              </ode>
+            </contact>
+            <friction>
+              <ode>
+                <mu>10</mu>
+                <mu2>10</mu2>
+              </ode>
+              <torsional>
+                <ode />
+              </torsional>
+            </friction>
+            <bounce />
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name="BOX_14_link_visual">
+          <pose>135.0 -39.0 0.3 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>5.0 5.0 2.0</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/WoodFloor</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <plugin name="BuoyancyPlugin" filename="libbuoyancy_gazebo_plugin.so">
+        <wave_model>ocean_waves</wave_model>
+        <fluid_density>1000</fluid_density>
+        <fluid_level>0</fluid_level>
+        <linear_drag>1000.0</linear_drag>
+        <angular_drag>200.0</angular_drag>
+        <buoyancy name="buoyancy_base">
+          <link_name>BOX_14_link</link_name>
+          <pose>135.0 -39.0 0.3 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.28794119114848615</radius>
+            </sphere>
+          </geometry>
+        </buoyancy>
+      </plugin>
+    </model>
+
+    <!-- NEW BOUNDARY LINES -->
+    <!-- Top Boundary (y=-2) -->
+    <model name="Boundary_Top">
+      <static>true</static>
+      <link name="boundary_top_link">
+        <visual name="boundary_top_visual">
+          <pose>90 -2 0.05 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>200 0.2 0.1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Red</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <collision name="boundary_top_collision">
+          <pose>90 -2 0.05 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>200 0.2 0.1</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- Boundary between Channel 1 and 2 (y=-18) -->
+    <model name="Boundary_1_2">
+      <static>true</static>
+      <link name="boundary_1_2_link">
+        <visual name="boundary_1_2_visual">
+          <pose>90 -18 0.05 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>200 0.2 0.1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Red</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <collision name="boundary_1_2_collision">
+          <pose>90 -18 0.05 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>200 0.2 0.1</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- Boundary between Channel 2 and 3 (y=-34) -->
+    <model name="Boundary_2_3">
+      <static>true</static>
+      <link name="boundary_2_3_link">
+        <visual name="boundary_2_3_visual">
+          <pose>90 -34 0.05 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>200 0.2 0.1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Red</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <collision name="boundary_2_3_collision">
+          <pose>90 -34 0.05 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>200 0.2 0.1</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- Bottom Boundary (y=-50) -->
+    <model name="Boundary_Bottom">
+      <static>true</static>
+      <link name="boundary_bottom_link">
+        <visual name="boundary_bottom_visual">
+          <pose>90 -50 0.05 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>200 0.2 0.1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Red</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <collision name="boundary_bottom_collision">
+          <pose>90 -50 0.05 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>200 0.2 0.1</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- Channel centerlines -->
+    <model name="Channel_Boundary_1">
+      <static>true</static>
+      <link name="channel1_link">
+        <visual name="channel1_visual">
+          <pose>90 -10 0.05 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>150 0.1 0.1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/White</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <collision name="channel1_collision">
+          <pose>90 -10 0.05 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>150 0.1 0.1</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+
+    <model name="Channel_Boundary_2">
+      <static>true</static>
+      <link name="channel2_link">
+        <visual name="channel2_visual">
+          <pose>90 -26 0.05 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>150 0.1 0.1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/White</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <collision name="channel2_collision">
+          <pose>90 -26 0.05 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>150 0.1 0.1</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+
+    <model name="Channel_Boundary_3">
+      <static>true</static>
+      <link name="channel3_link">
+        <visual name="channel3_visual">
+          <pose>90 -42 0.05 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>150 0.1 0.1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/White</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <collision name="channel3_collision">
+          <pose>90 -42 0.05 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>150 0.1 0.1</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- Centerlines for visual reference -->
+    <model name="Centerline_1">
+      <static>true</static>
+      <link name="centerline1_link">
+        <visual name="centerline1_visual">
+          <pose>90 -10 0.05 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>150 0.05 0.05</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/DarkGrey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="Centerline_2">
+      <static>true</static>
+      <link name="centerline2_link">
+        <visual name="centerline2_visual">
+          <pose>90 -26 0.05 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>150 0.05 0.05</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/DarkGrey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="Centerline_3">
+      <static>true</static>
+      <link name="centerline3_link">
+        <visual name="centerline3_visual">
+          <pose>90 -42 0.05 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>150 0.05 0.05</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/DarkGrey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+  </world>
+</sdf>
