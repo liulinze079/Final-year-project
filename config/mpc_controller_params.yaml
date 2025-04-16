@@ -1,0 +1,72 @@
+trajectory_controller:
+  # MPC parameters
+  mpc:
+    # Prediction horizon (steps)
+    prediction_horizon: 20
+    
+    # Control horizon (steps)
+    control_horizon: 10
+    
+    # Sampling time (seconds)
+    sampling_time: 0.1
+    
+    # Maximum number of iterations
+    max_iterations: 100
+    
+    # Convergence tolerance
+    convergence_tolerance: 1e-6
+    
+    # Maximum computation time (seconds)
+    max_computation_time: 0.05
+    
+    # Weight for position tracking errors
+    position_weight: 5.0
+    
+    # Weight for heading tracking errors
+    heading_weight: 2.0
+    
+    # Weight for velocity tracking errors
+    velocity_weight: 1.0
+    
+    # Weight for control input magnitudes
+    control_weight: 0.5
+    
+    # Weight for control input rates (changes)
+    control_rate_weight: 0.3
+    
+    # Maximum surge force (N)
+    max_surge_force: 1000.0
+    
+    # Maximum sway force (N)
+    max_sway_force: 800.0
+    
+    # Maximum yaw moment (N·m)
+    max_yaw_moment: 500.0
+    
+  # Energy-aware parameters
+  energy:
+    # Enable energy-efficient control
+    energy_efficient_control: true
+    
+    # Weight for energy consumption in cost function
+    energy_weight: 2.0
+    
+    # Propulsion efficiency map
+    propulsion_efficiency_map: "propulsion_efficiency.csv"
+    
+    # Environmental factor consideration
+    environmental_factors: true
+    
+  # Maritime-specific parameters
+  maritime:
+    # Update frequency (Hz)
+    update_frequency: 10.0
+    
+    # Safety distance threshold (meters)
+    safety_distance: 5.0
+    
+    # Collision avoidance enabled
+    collision_avoidance: true
+    
+    # Collision avoidance weight
+    collision_weight: 10.0 

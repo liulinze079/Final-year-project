@@ -1,0 +1,49 @@
+local_planner:
+  # RRT parameters
+  rrt:
+    # Maximum number of iterations
+    max_iterations: 2000
+    
+    # Goal bias probability (0-1)
+    goal_bias: 0.1
+    
+    # Step size for extending tree (meters)
+    step_size: 5.0
+    
+    # Maximum connection distance (meters)
+    max_connection_distance: 10.0
+    
+    # Obstacle safety margin (meters)
+    obstacle_safety_margin: 3.0
+    
+    # Enable path smoothing
+    enable_smoothing: true
+    
+    # Path resolution for smoothed path (meters)
+    path_resolution: 1.0
+    
+  # Maritime-specific parameters
+  maritime:
+    # Sampling bias towards shipping lanes
+    shipping_lane_bias: 0.3
+    
+    # Energy-aware sampling bias
+    energy_bias: 0.4
+    
+    # Current field influence on tree growth
+    current_influence: 0.6
+    
+    # RRT variant (basic, connect, star)
+    rrt_variant: "star"
+    
+    # Update frequency (Hz)
+    update_frequency: 5.0
+    
+    # Local planning horizon (meters)
+    planning_horizon: 300.0
+    
+    # Maximum replanning duration (seconds)
+    max_replanning_time: 0.2
+    
+    # Dynamic obstacle prediction horizon (seconds)
+    prediction_horizon: 30.0 

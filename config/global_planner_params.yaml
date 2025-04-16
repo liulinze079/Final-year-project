@@ -1,0 +1,46 @@
+global_planner:
+  # A* search parameters
+  a_star:
+    # Heuristic type (euclidean, manhattan, octile, chebyshev)
+    heuristic_type: "euclidean"
+    
+    # Heuristic weight (1.0 for optimal paths, >1.0 for faster but suboptimal)
+    heuristic_weight: 1.2
+    
+    # Allow diagonal movements in grid search
+    allow_diagonal: true
+    
+    # Minimum grid cell size (meters)
+    min_cell_size: 2.0
+    
+    # Obstacle inflation radius for planning (meters)
+    obstacle_inflation_radius: 5.0
+    
+  # Maritime-specific parameters
+  maritime:
+    # Weight factors for environmental factors
+    current_weight: 0.4
+    wave_weight: 0.3
+    lane_weight: 0.2
+    safety_weight: 0.1
+    
+    # Shipping lane preference (cost reduction when in lanes)
+    shipping_lane_factor: 0.7
+    
+    # Safety weight near obstacles (higher = safer paths)
+    safety_factor: 1.5
+    
+    # Energy awareness settings
+    energy_aware: true
+    
+    # Update frequency (Hz)
+    update_frequency: 1.0
+    
+    # Maximum planning time (seconds)
+    max_planning_time: 5.0
+    
+    # Maximum path length (meters)
+    max_path_length: 10000.0
+    
+    # Planning horizon (meters)
+    planning_horizon: 2000.0 

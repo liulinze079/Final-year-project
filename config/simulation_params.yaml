@@ -1,0 +1,82 @@
+simulation:
+  # Vessel parameters
+  vessel:
+    # ASV model type
+    model_type: "differential_drive"
+    
+    # Physical properties
+    length: 5.0  # meters
+    width: 2.0   # meters
+    mass: 1000.0 # kg
+    draft: 0.5   # meters
+    
+    # Propulsion configuration
+    propulsion_type: "twin_thruster"
+    max_thrust: 2000.0 # Newtons
+    max_speed: 5.0     # m/s
+    
+    # Hydrodynamic coefficients
+    added_mass_surge: 0.1
+    added_mass_sway: 0.6
+    added_mass_yaw: 0.2
+    linear_damping_surge: 50.0
+    linear_damping_sway: 100.0
+    linear_damping_yaw: 40.0
+    quadratic_damping_surge: 100.0
+    quadratic_damping_sway: 200.0
+    quadratic_damping_yaw: 80.0
+    
+  # Environment
+  environment:
+    # Current field
+    current_enabled: true
+    current_type: "uniform"  # uniform, radial, vortex, custom
+    current_speed: 0.5       # m/s
+    current_direction: 0.0   # radians
+    
+    # Wave field
+    waves_enabled: true
+    wave_height: 0.8         # meters
+    wave_period: 5.0         # seconds
+    wave_direction: 0.0      # radians
+    
+    # Wind field
+    wind_enabled: false
+    wind_speed: 5.0          # m/s
+    wind_direction: 0.0      # radians
+    
+  # Obstacles
+  obstacles:
+    # Static obstacles
+    static_obstacles_enabled: true
+    static_obstacles_file: "static_obstacles.csv"
+    
+    # Dynamic obstacles
+    dynamic_obstacles_enabled: true
+    dynamic_obstacles_file: "dynamic_obstacles.csv"
+    
+    # Restricted areas
+    restricted_areas_enabled: true
+    restricted_areas_file: "restricted_areas.csv"
+    
+  # Simulation settings
+  settings:
+    # Time step (seconds)
+    time_step: 0.1
+    
+    # Maximum simulation time (seconds)
+    max_simulation_time: 3600.0
+    
+    # Real-time factor (1.0 = real-time)
+    real_time_factor: 1.0
+    
+    # Random seed for reproducibility
+    random_seed: 42
+    
+    # Visualization enabled
+    visualization_enabled: true
+    
+    # Logging settings
+    logging_enabled: true
+    log_directory: "../logs"
+    log_frequency: 10 # Hz 

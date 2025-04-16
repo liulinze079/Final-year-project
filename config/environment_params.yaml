@@ -1,0 +1,87 @@
+environment:
+  # Multi-resolution grid parameters
+  grid:
+    # Base resolution (meters)
+    base_resolution: 10.0
+    
+    # Minimum resolution (meters)
+    min_resolution: 1.0
+    
+    # Maximum resolution (meters)
+    max_resolution: 50.0
+    
+    # Default grid size (meters)
+    grid_size_x: 10000.0
+    grid_size_y: 10000.0
+    
+    # Origin offset (meters)
+    origin_x: 0.0
+    origin_y: 0.0
+    
+    # Maximum number of levels
+    max_levels: 5
+    
+  # Force field model parameters
+  force_field:
+    # Force field model type (uniform, radial, vortex, data-driven)
+    model_type: "data-driven"
+    
+    # Current field resolution (meters)
+    current_resolution: 50.0
+    
+    # Current field source (file, model, live)
+    current_source: "file"
+    
+    # Current field data file
+    current_data_file: "current_field_data.csv"
+    
+    # Interpolation method (nearest, bilinear, bicubic)
+    interpolation_method: "bilinear"
+    
+    # Maximum current speed (m/s)
+    max_current_speed: 2.0
+    
+  # Temporal decay parameters
+  temporal:
+    # Decay model (none, linear, exponential, custom)
+    decay_model: "exponential"
+    
+    # Half-life for exponential decay (seconds)
+    half_life: 3600.0
+    
+    # Maximum data age (seconds)
+    max_data_age: 14400.0
+    
+    # Data update interval (seconds)
+    update_interval: 300.0
+    
+  # Wave parameters
+  waves:
+    # Wave model enabled
+    enabled: true
+    
+    # Default wave height (meters)
+    default_wave_height: 1.0
+    
+    # Default wave period (seconds)
+    default_wave_period: 8.0
+    
+    # Default wave direction (radians)
+    default_wave_direction: 0.0
+    
+    # Wave model type (constant, spectral, data-driven)
+    model_type: "data-driven"
+    
+    # Wave data source
+    wave_data_source: "wave_data.csv"
+    
+  # Shipping lanes
+  shipping_lanes:
+    # Shipping lanes enabled
+    enabled: true
+    
+    # Shipping lanes data file
+    data_file: "shipping_lanes.csv"
+    
+    # Cost reduction in shipping lanes (0-1)
+    cost_reduction: 0.2 
