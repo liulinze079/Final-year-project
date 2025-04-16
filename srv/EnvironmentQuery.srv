@@ -1,0 +1,58 @@
+# EnvironmentQuery.srv
+# Service to query environmental data for a specific region
+
+# Request
+#---------
+# Query type
+uint8 query_type
+uint8 QUERY_FORCES = 0       # Get environmental forces
+uint8 QUERY_OBSTACLES = 1    # Get obstacle information
+uint8 QUERY_DEPTH = 2        # Get depth information
+uint8 QUERY_ALL = 3          # Get all environmental data
+
+# Query area
+geometry_msgs/Point min_point  # Min coordinates (x, y, z)
+geometry_msgs/Point max_point  # Max coordinates (x, y, z)
+
+# Alternative: circular query around a point
+geometry_msgs/Point center     # Center point of query
+float64 radius                 # Radius of query area in meters
+
+# Query resolution
+float64 resolution             # Desired resolution in meters
+
+# Time information
+time query_time                # Time for which to query the data
+float64 time_horizon           # Time window to predict future conditions (seconds)
+
+---
+
+# Response
+#----------
+# Success flag
+bool success
+
+# Status message
+string status_message
+
+# Environmental forces data (if requested)
+asv_energy_aware_planning/EnvironmentalForce[] forces
+
+# Grid representation (optional)
+float64[] grid_values          # Flattened grid of values (interpretation depends on query_type)
+uint32 grid_width              # Width of the grid
+uint32 grid_height             # Height of the grid
+float64 grid_resolution        # Actual resolution of the returned grid
+
+# Obstacle data (if requested)
+geometry_msgs/Polygon[] obstacle_polygons    # Polygon representations of obstacles
+float64[] obstacle_risk_values               # Risk value for each obstacle (0.0-1.0)
+
+# Depth data (if requested)
+float64[] depth_values                       # Depth values at query points
+geometry_msgs/Point[] depth_points           # Query points for depth data
+
+# Metadata
+time data_timestamp                          # Timestamp of the data
+string data_source                           # Source of the environmental data
+float64 prediction_confidence                # Confidence level for predictions (0.0-1.0) 

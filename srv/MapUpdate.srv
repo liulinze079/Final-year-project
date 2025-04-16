@@ -1,0 +1,66 @@
+# MapUpdate.srv
+# Service for updating the environment map with new information
+
+# Request
+#---------
+# Update type
+uint8 update_type
+uint8 UPDATE_OBSTACLE = 0        # Update obstacle information
+uint8 UPDATE_FORCES = 1          # Update environmental forces
+uint8 UPDATE_DEPTH = 2           # Update depth information
+uint8 UPDATE_COMPLETE_MAP = 3    # Replace the entire map
+
+# Source information
+string source_id                 # Identifier of the update source
+time timestamp                   # Time when the data was collected
+
+# Region to update (for partial updates)
+geometry_msgs/Point min_point    # Min coordinates of update region
+geometry_msgs/Point max_point    # Max coordinates of update region
+
+# Obstacle updates
+geometry_msgs/Polygon[] obstacle_polygons    # Polygon representations of obstacles
+uint8[] obstacle_types                       # Type of each obstacle
+float64[] obstacle_confidence                # Confidence value for each obstacle (0.0-1.0)
+bool[] obstacle_is_dynamic                   # Flag indicating if obstacle is dynamic
+geometry_msgs/Vector3[] obstacle_velocity    # Velocity vector for dynamic obstacles
+
+# Environmental forces updates
+asv_energy_aware_planning/EnvironmentalForce[] forces  # Force field updates
+
+# Depth updates
+geometry_msgs/Point[] depth_points           # Points where depth is measured
+float64[] depth_values                       # Measured depth values at points
+
+# Complete map data (for UPDATE_COMPLETE_MAP)
+nav_msgs/OccupancyGrid occupancy_grid        # Occupancy grid for static map
+float64[] force_field_x                      # X component of force field (flattened grid)
+float64[] force_field_y                      # Y component of force field (flattened grid)
+uint32 force_field_width                     # Width of force field grid
+uint32 force_field_height                    # Height of force field grid
+float64 force_field_resolution               # Resolution of force field grid
+
+---
+
+# Response
+#----------
+# Success flag
+bool success
+
+# Status message
+string status_message
+
+# Update confirmation
+uint32 update_id                 # Unique ID for this update
+
+# Map information after update
+uint32 map_version               # Updated map version number
+time map_timestamp               # Timestamp of the updated map
+
+# Update summary
+uint32 elements_updated          # Number of map elements that were updated
+float64 update_area              # Area affected by the update (sq meters)
+
+# Validation information
+float64 integration_confidence   # Confidence of data integration (0.0-1.0)
+string[] validation_warnings     # Any warnings during update validation 

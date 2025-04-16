@@ -1,0 +1,54 @@
+# LocalPathAdaptation.srv
+# Service to request local path adaptation based on current conditions
+
+# Request
+#---------
+# Unique request identifier
+string request_id
+
+# Current ASV state
+asv_energy_aware_planning/ASVState current_state
+
+# Current global path being followed
+asv_energy_aware_planning/PlanningPath global_path
+
+# Current environmental conditions
+asv_energy_aware_planning/EnvironmentalForce[] environmental_forces
+
+# Dynamic obstacles
+geometry_msgs/PoseStamped[] dynamic_obstacles
+geometry_msgs/TwistStamped[] obstacle_velocities
+
+# Adaptation parameters
+float64 lookahead_distance     # Distance to look ahead for adaptation in meters
+float64 safety_margin          # Safety margin around obstacles in meters
+float64 max_deviation          # Maximum deviation from global path in meters
+float64 time_horizon           # Time horizon for adaptation in seconds
+float64 max_planning_time      # Maximum planning time in seconds
+
+# Adaptation mode
+uint8 adaptation_mode          # 0: safety-focused, 1: energy-focused, 2: balanced
+
+---
+
+# Response
+#----------
+# Success flag
+bool success
+
+# Status message
+string status_message
+
+# Adapted local path
+asv_energy_aware_planning/PlanningPath local_path
+
+# Adaptation metrics
+float64 adaptation_time        # Time taken for adaptation in seconds
+float64 max_deviation_used     # Maximum deviation used from global path in meters
+float64 safety_score           # Safety score of adapted path (0-1)
+float64 energy_impact          # Energy impact relative to global path (%)
+
+# Collision avoidance info
+bool collision_avoidance_activated
+geometry_msgs/Point[] collision_points
+uint32 collision_obstacle_count 

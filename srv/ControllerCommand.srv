@@ -1,0 +1,71 @@
+# ControllerCommand.srv
+# Service to send commands to the MPC trajectory controller
+
+# Request
+#---------
+# Unique request identifier
+string request_id
+
+# Command type
+uint8 command_type
+uint8 COMMAND_FOLLOW_TRAJECTORY = 0    # Follow a trajectory
+uint8 COMMAND_STATION_KEEPING = 1      # Maintain position
+uint8 COMMAND_EMERGENCY_STOP = 2       # Emergency stop
+uint8 COMMAND_MANUAL_CONTROL = 3       # Pass direct control commands
+uint8 COMMAND_CHANGE_PARAMS = 4        # Change controller parameters
+
+# Current ASV state
+asv_energy_aware_planning/ASVState current_state
+
+# Target trajectory (if COMMAND_FOLLOW_TRAJECTORY)
+asv_energy_aware_planning/PlanningPath trajectory
+
+# Target position (if COMMAND_STATION_KEEPING)
+geometry_msgs/Pose target_pose
+
+# Manual control commands (if COMMAND_MANUAL_CONTROL)
+float64 thrust_left    # Left thruster command (-100% to 100%)
+float64 thrust_right   # Right thruster command (-100% to 100%)
+float64 rudder_angle   # Rudder angle command (radians)
+
+# Controller parameters (if COMMAND_CHANGE_PARAMS)
+float64[] param_values
+string[] param_names
+
+# Environmental forces
+asv_energy_aware_planning/EnvironmentalForce[] environmental_forces
+
+# Control parameters
+float64 control_time_step   # Control time step in seconds
+float64 prediction_horizon  # Prediction horizon in seconds
+float64 energy_weight       # Weight for energy optimization (0-1)
+
+---
+
+# Response
+#----------
+# Success flag
+bool success
+
+# Status message
+string status_message
+
+# Controller state
+uint8 controller_state
+uint8 STATE_IDLE = 0
+uint8 STATE_ACTIVE = 1
+uint8 STATE_ERROR = 2
+uint8 STATE_EMERGENCY = 3
+
+# Predicted trajectory if command was accepted
+asv_energy_aware_planning/PlanningPath predicted_trajectory
+
+# Predicted control inputs
+float64[] predicted_thrusts_left   # Predicted left thruster commands
+float64[] predicted_thrusts_right  # Predicted right thruster commands
+float64[] predicted_rudder_angles  # Predicted rudder angles
+
+# Performance metrics
+float64 predicted_energy_consumption  # Predicted energy consumption in kWh
+float64 tracking_error               # Predicted tracking error in meters
+float64 stabilization_time           # Time to stabilize in seconds 

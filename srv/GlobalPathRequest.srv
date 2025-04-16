@@ -1,0 +1,56 @@
+# GlobalPathRequest.srv
+# Service to request global path planning
+
+# Request
+#---------
+# Unique request identifier
+string request_id
+
+# Start pose
+geometry_msgs/Pose start
+
+# Goal pose
+geometry_msgs/Pose goal
+
+# Planning parameters
+float64 max_planning_time     # Maximum planning time in seconds
+bool energy_aware             # Whether to consider energy in planning
+float64 obstacle_margin       # Safety margin around obstacles in meters
+
+# Environmental constraints
+bool consider_currents        # Whether to consider currents
+bool consider_waves           # Whether to consider waves
+bool prefer_shipping_lanes    # Whether to prefer shipping lanes
+
+# Planning mode
+uint8 planning_mode           # 0: standard, 1: energy-optimal, 2: time-optimal, 3: safety-optimal
+float64 time_horizon          # Time horizon for planning in seconds
+
+# Additional constraints
+geometry_msgs/Polygon[] restricted_areas  # Areas to avoid
+geometry_msgs/Polygon[] preferred_areas   # Areas to prefer
+
+---
+
+# Response
+#----------
+# Success flag
+bool success
+
+# Status message
+string status_message
+
+# Result path
+asv_energy_aware_planning/PlanningPath path
+
+# Planning statistics
+float64 planning_time         # Time taken for planning in seconds
+uint32 iterations             # Number of iterations
+uint32 nodes_explored         # Number of nodes explored
+
+# Energy metrics
+float64 estimated_energy      # Estimated energy consumption in kWh
+float64 energy_efficiency     # Energy efficiency in meters/kWh
+
+# If planning failed, alternative paths may be provided
+asv_energy_aware_planning/PlanningPath[] alternative_paths 
